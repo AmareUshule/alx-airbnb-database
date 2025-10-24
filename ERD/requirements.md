@@ -1,258 +1,114 @@
-Database Normalization – Airbnb Database
-
-1\. Original Schema Overview
-
-
-
-Entities:
-
-
-
-User (user\_id, first\_name, last\_name, email, password\_hash, phone\_number, role, created\_at)
-
-
-
-Property (property\_id, host\_id, name, description, location, pricepernight, created\_at, updated\_at)
-
-
-
-Booking (booking\_id, property\_id, user\_id, start\_date, end\_date, total\_price, status, created\_at)
-
-
-
-Payment (payment\_id, booking\_id, amount, payment\_date, payment\_method)
-
-
-
-Review (review\_id, property\_id, user\_id, rating, comment, created\_at)
-
-
-
-Message (message\_id, sender\_id, recipient\_id, message\_body, sent\_at)
-
-
-
-2\. Step 1: First Normal Form (1NF)
-
-
-
-1NF Requirements:
-
-
-
-Each column must contain atomic values.
-
-
-
-Each row must be unique.
-
-
-
-Analysis:
-
-
-
-All attributes are atomic (no multi-valued attributes).
-
-
-
-Primary keys exist for each table.
-
-
-
-✅ Conclusion: The schema is in 1NF.
-
-
-
-3\. Step 2: Second Normal Form (2NF)
-
-
-
-2NF Requirements:
-
-
-
-Already in 1NF.
-
-
-
-No partial dependency of any column on a subset of a composite primary key.
-
-
-
-Analysis:
-
-
-
-All tables use single-column primary keys (UUIDs), so no partial dependencies exist.
-
-
-
-✅ Conclusion: The schema is in 2NF.
-
-
-
-4\. Step 3: Third Normal Form (3NF)
-
-
-
-3NF Requirements:
-
-
-
-Already in 2NF.
-
-
-
-No transitive dependency (non-key column depends on another non-key column).
-
-
-
-Analysis \& Adjustments:
-
-
-
-User Table:
-
-
-
-No transitive dependencies. ✅
-
-
-
-Property Table:
-
-
-
-host\_id is a foreign key → OK.
-
-
-
-No attribute depends on another non-key attribute. ✅
-
-
-
-Booking Table:
-
-
-
-total\_price could be calculated as pricepernight \* number\_of\_nights.
-
-
-
-Option: Remove total\_price to avoid redundancy. Or keep it for performance (denormalization).
-
-
-
-Payment Table:
-
-
-
-No transitive dependencies. ✅
-
-
-
-Review Table:
-
-
-
-No transitive dependencies. ✅
-
-
-
-Message Table:
-
-
-
-No transitive dependencies. ✅
-
-
-
-5\. Additional 3NF Improvements
-
-
-
-Separate property location details:
-
-
-
-If location includes city, state, country, consider creating a Location table for reusability and to avoid repeating strings:
-
-
-
-Location Table
-
-
-
-location\_id (PK)
-
-
-
-city
-
-
-
-state
-
-
-
-country
-
-
-
-Then, Property references location\_id instead of location text. ✅
-
-
-
-Separate Payment Method Table (Optional):
-
-
-
-payment\_method\_id (PK)
-
-
-
-method\_name (credit\_card, paypal, stripe)
-
-
-
-Then, Payment.payment\_method\_id references this table.
-
-
-
-These optional tables reduce redundancy and enforce consistency.
-
-
-
-6\. 3NF Conclusion
-
-
-
-After reviewing the schema:
-
-
-
-All tables are in 3NF.
-
-
-
-Optional refinements for Location and Payment Method tables can further reduce redundancy.
-
-
-
-7\. Summary Table – Normalization Steps
-
-Table	1NF	2NF	3NF	Notes
-
-User	✅	✅	✅	No changes needed
-
-Property	✅	✅	✅	Optional: Location table
-
-Booking	✅	✅	✅	Optional: Remove total\_price
-
-Payment	✅	✅	✅	Optional: Payment Method table
-
-Review	✅	✅	✅	No changes needed
-
-Message	✅	✅	✅	No changes needed
-
+# Entities and Relationships in ER Diagram
+
+## 1. Entities and Attributes
+
+### 1.1 User
+**Attributes:**
+- `user_id` (PK, UUID, Indexed)  
+- `first_name` (VARCHAR, NOT NULL)  
+- `last_name` (VARCHAR, NOT NULL)  
+- `email` (VARCHAR, UNIQUE, NOT NULL)  
+- `password_hash` (VARCHAR, NOT NULL)  
+- `phone_number` (VARCHAR, NULL)  
+- `role` (ENUM: guest, host, admin, NOT NULL)  
+- `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+
+**Constraints:**
+- `email` UNIQUE  
+- Non-null: `first_name`, `last_name`, `email`, `password_hash`, `role`  
+
+---
+
+### 1.2 Property
+**Attributes:**
+- `property_id` (PK, UUID, Indexed)  
+- `host_id` (FK → User.user_id)  
+- `name` (VARCHAR, NOT NULL)  
+- `description` (TEXT, NOT NULL)  
+- `location` (VARCHAR, NOT NULL)  
+- `price_per_night` (DECIMAL, NOT NULL)  
+- `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+- `updated_at` (TIMESTAMP, ON UPDATE CURRENT_TIMESTAMP)  
+
+**Constraints:**
+- FK: `host_id` → `User.user_id`  
+- Non-null: `name`, `description`, `location`, `price_per_night`  
+
+---
+
+### 1.3 Booking
+**Attributes:**
+- `booking_id` (PK, UUID, Indexed)  
+- `property_id` (FK → Property.property_id)  
+- `user_id` (FK → User.user_id)  
+- `start_date` (DATE, NOT NULL)  
+- `end_date` (DATE, NOT NULL)  
+- `total_price` (DECIMAL, NOT NULL)  
+- `status` (ENUM: pending, confirmed, canceled, NOT NULL)  
+- `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+
+**Constraints:**
+- FK: `property_id`, `user_id`  
+- `status` restricted to: pending, confirmed, canceled  
+
+---
+
+### 1.4 Payment
+**Attributes:**
+- `payment_id` (PK, UUID, Indexed)  
+- `booking_id` (FK → Booking.booking_id)  
+- `amount` (DECIMAL, NOT NULL)  
+- `payment_date` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+- `payment_method` (ENUM: credit_card, paypal, stripe, NOT NULL)  
+
+**Constraints:**
+- FK: `booking_id`  
+- Non-null: `amount`, `payment_method`  
+
+---
+
+### 1.5 Review
+**Attributes:**
+- `review_id` (PK, UUID, Indexed)  
+- `property_id` (FK → Property.property_id)  
+- `user_id` (FK → User.user_id)  
+- `rating` (INTEGER, 1–5, NOT NULL)  
+- `comment` (TEXT, NOT NULL)  
+- `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+
+**Constraints:**
+- FK: `property_id`, `user_id`  
+- `rating` must be between 1 and 5  
+
+---
+
+### 1.6 Message
+**Attributes:**
+- `message_id` (PK, UUID, Indexed)  
+- `sender_id` (FK → User.user_id)  
+- `recipient_id` (FK → User.user_id)  
+- `message_body` (TEXT, NOT NULL)  
+- `sent_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)  
+
+**Constraints:**
+- FK: `sender_id`, `recipient_id`  
+- Non-null: `message_body`  
+
+---
+
+## 2. Relationships
+
+| Relationship                       | Type | Description |
+|-----------------------------------|------|-------------|
+| User → Property                    | 1:N  | A host (User) can list multiple properties; a property belongs to one host. |
+| User → Booking                     | 1:N  | A guest (User) can make multiple bookings; each booking belongs to one user. |
+| Property → Booking                 | 1:N  | A property can have multiple bookings; each booking is for one property. |
+| Booking → Payment                  | 1:1  | Each booking has at least one payment; each payment belongs to a booking. |
+| User → Review                      | 1:N  | A user can write multiple reviews; each review is written by one user. |
+| Property → Review                  | 1:N  | A property can have multiple reviews; each review is for one property. |
+| User → Message (as sender)         | 1:N  | A user can send many messages; each message has one sender. |
+| User → Message (as recipient)      | 1:N  | A user can receive many messages; each message has one recipient. |
+
+## ER Diagram
+
+![Airbnb Database ER Diagram](../airbnb_erd.png)
