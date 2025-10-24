@@ -1,5 +1,6 @@
 1. Entities and Attributes
 1. User
+   
 
 Attributes:
 
@@ -25,7 +26,9 @@ email UNIQUE
 
 Non-null constraints on first_name, last_name, email, password_hash, role
 
+
 2. Property
+   
 
 Attributes:
 
@@ -51,7 +54,9 @@ Foreign key host_id → User.user_id
 
 Non-null constraints on name, description, location, pricepernight
 
+
 3. Booking
+   
 
 Attributes:
 
@@ -77,7 +82,9 @@ Foreign keys → property_id, user_id
 
 status restricted to pending, confirmed, canceled
 
+
 4. Payment
+   
 
 Attributes:
 
@@ -97,7 +104,9 @@ Foreign key → booking_id
 
 Non-null constraints on amount, payment_method
 
+
 5. Review
+
 
 Attributes:
 
@@ -139,14 +148,15 @@ Foreign keys → sender_id, recipient_id
 
 Non-null message_body
 
+
 2. Relationships
-Relationship	Type	Description
-User → Property	1:N	A host (User) can list multiple properties; a property belongs to one host.
-User → Booking	1:N	A guest (User) can make multiple bookings; each booking belongs to one user.
-Property → Booking	1:N	A property can have multiple bookings; each booking is for one property.
-Booking → Payment	1:1	Each booking has at least one payment; each payment belongs to a booking.
-User → Review	1:N	A user can write multiple reviews; each review is written by one user.
-Property → Review	1:N	A property can have multiple reviews; each review is for one property.
-User → Message (as sender)	1:N	A user can send many messages; each message has one sender.
-User → Message (as recipient)	1:N	A user can receive many messages; each message has one recipient.
+Relationship    	             Type	                   Description
+User → Property	               1:N	                    A host (User) can list multiple properties; a property belongs to one host.
+User → Booking	               1:N	                    A guest (User) can make multiple bookings; each booking belongs to one user.
+Property → Booking	           1:N	                    A property can have multiple bookings; each booking is for one property.
+Booking → Payment	             1:1	                    Each booking has at least one payment; each payment belongs to a booking.
+User → Review	                 1:N	                    A user can write multiple reviews; each review is written by one user.
+Property → Review	             1:N	                    A property can have multiple reviews; each review is for one property.
+User → Message (as sender)	   1:N	                    A user can send many messages; each message has one sender.
+User → Message (as recipient)	 1:N	                    A user can receive many messages; each message has one recipient.
 
