@@ -112,6 +112,8 @@
 
 ## ER Diagram
 
-![Airbnb Database ER Diagram](airbnb_erd.png)
+## ER Diagram
+
+![Airbnb Database ER Diagram](erd/airbnb_erd.png)
 
 
