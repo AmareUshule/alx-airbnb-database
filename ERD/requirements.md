@@ -110,9 +110,11 @@
 | User → Message (as recipient)      | 1:N  | A user can receive many messages; each message has one recipient. |
 
 
+
 ## ER Diagram
 
-![Airbnb Database ER Diagram](airbnb_erd.png)
+![Airbnb Database ER Diagram](../airbnb_erd.png)
+
 
 
 
