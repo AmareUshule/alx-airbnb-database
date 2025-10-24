@@ -1,4 +1,4 @@
-# Airbnb Database ERD
+#  Entities and Relationships in ER Diagram
 
 ## 1. Entities and Attributes
 
@@ -108,3 +108,8 @@
 | Property → Review                  | 1:N  | A property can have multiple reviews; each review is for one property. |
 | User → Message (as sender)         | 1:N  | A user can send many messages; each message has one sender. |
 | User → Message (as recipient)      | 1:N  | A user can receive many messages; each message has one recipient. |
+
+
+
+
+
