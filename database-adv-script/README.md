@@ -46,3 +46,29 @@ This script demonstrates complex SQL join operations for the Airbnb database sch
 
 
 
+
+
+\# SQL Subqueries - Airbnb Database
+
+
+
+\## Objective
+
+Practice writing \*\*non-correlated\*\* and \*\*correlated\*\* subqueries.
+
+
+
+\### Queries Included
+
+1\. Non-correlated subquery: Find all properties where the average rating is greater than 4.0.
+
+2\. Correlated subquery: Find all users who have made more than 3 bookings.
+
+
+
+\### File
+
+\- `subqueries.sql` — Contains the subquery examples.
+
+
+
