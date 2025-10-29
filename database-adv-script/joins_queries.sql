@@ -28,6 +28,7 @@ LEFT JOIN reviews
 ON properties.id = reviews.property_id;
 
 
+
 -- 3️⃣ FULL OUTER JOIN: All users and all bookings, even if unmatched
 SELECT 
     users.id AS user_id,
