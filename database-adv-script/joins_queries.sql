@@ -16,17 +16,17 @@ ON bookings.user_id = users.id;
 
 -- 2️⃣ LEFT JOIN: All properties and their reviews (even properties without reviews)
 SELECT 
-    properties.id AS property_id,
+    properties.id,
     properties.title,
     properties.price_per_night,
-    reviews.id AS review_id,
+    reviews.id,
     reviews.rating,
     reviews.comment,
-    reviews.user_id AS reviewer_id
+    reviews.user_id
 FROM properties
 LEFT JOIN reviews
-ON properties.id = reviews.property_id;
-
+ON properties.id = reviews.property_id
+ORDER BY properties.id ASC;
 
 -- 3️⃣ FULL OUTER JOIN: All users and all bookings, even if unmatched
 SELECT 
