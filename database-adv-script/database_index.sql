@@ -21,3 +21,11 @@ CREATE INDEX idx_reviews_user_id ON reviews(user_id);
 
 -- 5. Indexes on Payments table
 CREATE INDEX idx_payments_booking_id ON payments(booking_id);
+
+-- Query: Total bookings per user
+EXPLAIN ANALYZE
+SELECT u.id, u.username, COUNT(b.id) AS total_bookings
+FROM users u
+LEFT JOIN bookings b ON u.id = b.user_id
+GROUP BY u.id, u.username;
+
